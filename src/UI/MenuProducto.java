@@ -14,10 +14,10 @@ import java.util.Scanner;
 
 /**
  * Menú para la gestión de productos
- * @author v0
  */
 public class MenuProducto {
     
+    private static final String usuarioActual = null;
     private MenuPrincipal menuPrincipal;
     private Scanner scanner;
     private ProductoController productoController;
@@ -59,12 +59,12 @@ public class MenuProducto {
             
             System.out.print("Seleccione una opción: ");
             int opcion = Integer.parseInt(scanner.nextLine());
-            
             switch (opcion) {
                 case 1:
                     verDetalleProducto();
                     break;
                 case 0:
+                    MenuPrincipal.mostrarMenuUsuarioLogueado();
                     // Volver
                     break;
                 default:
@@ -92,7 +92,9 @@ public class MenuProducto {
             System.out.println("Stock: " + producto.getStock());
             System.out.println("Categoría: " + producto.getCategoria().getNombre());
             System.out.println("Vendedor: " + producto.getVendedor().getNombre() + " " + 
-                              producto.getVendedor().getApellido());
+            producto.getVendedor().getApellido());
+        }
+        
             
             Usuario usuarioActual = menuPrincipal.getUsuarioActual();
             
@@ -119,17 +121,18 @@ public class MenuProducto {
                             editarProducto(producto);
                         } else {
                             System.out.println("Opción no válida. Intente nuevamente.");
-                        }
+                        } MenuPrincipal.mostrarMenuUsuarioLogueado();
                         break;
                     case 3:
                         if (usuarioActual.getId() == producto.getVendedor().getId()) {
                             eliminarProducto(producto);
                         } else {
                             System.out.println("Opción no válida. Intente nuevamente.");
-                        }
+                        } MenuPrincipal.mostrarMenuUsuarioLogueado();
                         break;
                     case 0:
                         // Volver
+                        MenuPrincipal.mostrarMenuUsuarioLogueado();
                         break;
                     default:
                         System.out.println("Opción no válida. Intente nuevamente.");
@@ -143,13 +146,13 @@ public class MenuProducto {
                 int opcion = Integer.parseInt(scanner.nextLine());
                 
                 if (opcion != 0) {
-                    System.out.println("Opción no válida. Intente nuevamente.");
+                    System.out.println("Seleccione una opcion valida");
+                } else {
+                    mostrarProductos();
                 }
             }
-        } else {
-            System.out.println("Producto no encontrado.");
-        }
     }
+            
     
     /**
      * Agrega un producto al carrito
@@ -299,6 +302,11 @@ public class MenuProducto {
                     verDetalleProducto();
                     break;
                 case 0:
+                if (usuarioActual != null) {
+                    MenuPrincipal.mostrarMenu();
+                    } else {
+                    MenuPrincipal.mostrarMenuUsuarioLogueado();
+                }
                     // Volver
                     break;
                 default:
@@ -307,7 +315,6 @@ public class MenuProducto {
             }
         }
     }
-    
     /**
      * Muestra todas las categorías
      */
@@ -329,20 +336,20 @@ public class MenuProducto {
             
             System.out.print("Seleccione una opción: ");
             int opcion = Integer.parseInt(scanner.nextLine());
-            
             switch (opcion) {
                 case 1:
                     verProductosPorCategoria();
                     break;
                 case 0:
+                    MenuPrincipal.mostrarMenuUsuarioLogueado();
                     // Volver
                     break;
                 default:
                     System.out.println("Opción no válida. Intente nuevamente.");
                     break;
             }
+            }
         }
-    }
     
     /**
      * Muestra los productos de una categoría
@@ -355,6 +362,7 @@ public class MenuProducto {
         
         if (productos.isEmpty()) {
             System.out.println("No hay productos en esta categoría.");
+            MenuPrincipal.mostrarMenuUsuarioLogueado();
         } else {
             System.out.println("\nProductos de la categoría:");
             for (Producto producto : productos) {
@@ -374,6 +382,7 @@ public class MenuProducto {
                     verDetalleProducto();
                     break;
                 case 0:
+                    MenuPrincipal.mostrarMenuUsuarioLogueado();
                     // Volver
                     break;
                 default:
@@ -381,7 +390,7 @@ public class MenuProducto {
                     break;
             }
         }
-    }
+        }
     
     /**
      * Muestra los productos del vendedor actual
@@ -419,6 +428,7 @@ public class MenuProducto {
                         agregarProducto();
                         break;
                     case 0:
+                        MenuPrincipal.mostrarMenuUsuarioLogueado();
                         // Volver
                         break;
                     default:

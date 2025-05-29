@@ -16,9 +16,9 @@ import java.util.Scanner;
  */
 public class MenuCompra {
     
-    private MenuPrincipal menuPrincipal;
-    private Scanner scanner;
-    private CompraController compraController;
+    private static MenuPrincipal menuPrincipal;
+    private static Scanner scanner;
+    private static CompraController compraController;
     
     /**
      * Constructor
@@ -33,7 +33,7 @@ public class MenuCompra {
     /**
      * Muestra el carrito de compras
      */
-    public void verCarrito() {
+    public static void verCarrito() {
         Usuario usuarioActual = menuPrincipal.getUsuarioActual();
         
         if (usuarioActual != null) {
@@ -44,6 +44,7 @@ public class MenuCompra {
             
             if (carrito.getItems().isEmpty()) {
                 System.out.println("El carrito está vacío.");
+                MenuPrincipal.mostrarMenuUsuarioLogueado();
             } else {
                 System.out.println("Productos en el carrito:");
                 int i = 1;
@@ -68,6 +69,7 @@ public class MenuCompra {
                 switch (opcion) {
                     case 1:
                         realizarCompra(carrito);
+                        MenuPrincipal.mostrarMenuUsuarioLogueado();
                         break;
                     case 2:
                         eliminarDelCarrito(carrito);
@@ -76,6 +78,7 @@ public class MenuCompra {
                         vaciarCarrito(carrito);
                         break;
                     case 0:
+                        MenuPrincipal.mostrarMenuUsuarioLogueado();
                         // Volver
                         break;
                     default:
@@ -92,7 +95,7 @@ public class MenuCompra {
      * Realiza una compra
      * @param carrito Carrito de compras
      */
-    private void realizarCompra(Carrito carrito) {
+    private static void realizarCompra(Carrito carrito) {
         if (carrito.getItems().isEmpty()) {
             System.out.println("El carrito está vacío.");
             return;
@@ -121,7 +124,7 @@ public class MenuCompra {
      * Elimina un producto del carrito
      * @param carrito Carrito de compras
      */
-    private void eliminarDelCarrito(Carrito carrito) {
+    private static void eliminarDelCarrito(Carrito carrito) {
         if (carrito.getItems().isEmpty()) {
             System.out.println("El carrito está vacío.");
             return;
@@ -148,7 +151,7 @@ public class MenuCompra {
      * Vacía el carrito
      * @param carrito Carrito de compras
      */
-    private void vaciarCarrito(Carrito carrito) {
+    private static void vaciarCarrito(Carrito carrito) {
         if (carrito.getItems().isEmpty()) {
             System.out.println("El carrito ya está vacío.");
             return;
@@ -173,7 +176,7 @@ public class MenuCompra {
     /**
      * Muestra las compras del usuario actual
      */
-    public void verMisCompras() {
+    public static void verMisCompras() {
         Usuario usuarioActual = menuPrincipal.getUsuarioActual();
         
         if (usuarioActual != null) {
@@ -183,6 +186,7 @@ public class MenuCompra {
             
             if (compras.isEmpty()) {
                 System.out.println("No tiene compras registradas.");
+                MenuPrincipal.mostrarMenuUsuarioLogueado();
             } else {
                 for (Compra compra : compras) {
                     System.out.println("ID: " + compra.getId() + 
@@ -202,6 +206,7 @@ public class MenuCompra {
                         verDetalleCompra();
                         break;
                     case 0:
+                    MenuCompra.verCarrito();
                         // Volver
                         break;
                     default:
@@ -217,7 +222,7 @@ public class MenuCompra {
     /**
      * Muestra el detalle de una compra
      */
-    private void verDetalleCompra() {
+    private static void verDetalleCompra() {
         System.out.print("Ingrese el ID de la compra: ");
         int id = Integer.parseInt(scanner.nextLine());
         

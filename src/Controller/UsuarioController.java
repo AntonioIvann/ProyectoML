@@ -2,6 +2,7 @@ package Controller;
 
 import Model.Usuario;
 import Service.UsuarioService;
+import UI.MenuPrincipal;
 
 import java.util.List;
 
@@ -168,6 +169,7 @@ public class UsuarioController {
      * @return Usuario autenticado o null si las credenciales son inválidas
      */
     public Usuario autenticar(String email, String password) {
+        try {
         if (email == null || email.trim().isEmpty() || !email.contains("@")) {
             System.out.println("El email no es válido");
             return null;
@@ -176,8 +178,12 @@ public class UsuarioController {
         if (password == null || password.trim().isEmpty()) {
             System.out.println("La contraseña es obligatoria");
             return null;
+        } 
+
+        } catch (Exception e){
+            System.err.println("Error al autenticar: " + e);
         }
-        
         return usuarioService.autenticar(email, password);
+        
     }
 }

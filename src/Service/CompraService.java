@@ -9,13 +9,8 @@ import Model.Usuario;
 import Repository.CompraRepository;
 import Repository.ProductoRepository;
 
-import java.math.*;
 import java.util.*;
 
-/**
- * Servicio para la gestión de compras
- * @author v0
- */
 public class CompraService {
     
     private CompraRepository compraRepository;

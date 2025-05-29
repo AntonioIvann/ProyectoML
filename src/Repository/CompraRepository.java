@@ -9,27 +9,16 @@ import Model.Usuario;
 import java.sql.*;
 import java.util.*;
 
-/**
- * Repositorio para operaciones CRUD de compras en la base de datos
- * @author v0
- */
 public class CompraRepository {
     
     private UsuarioRepository usuarioRepository;
     private ProductoRepository productoRepository;
     
-    /**
-     * Constructor
-     */
     public CompraRepository() {
         this.usuarioRepository = new UsuarioRepository();
         this.productoRepository = new ProductoRepository();
     }
     
-    /**
-     * Obtiene todas las compras de la base de datos
-     * @return Lista de compras
-     */
     public List<Compra> obtenerTodas() {
         List<Compra> compras = new ArrayList<>();
         String sql = "SELECT * FROM compras";
@@ -40,7 +29,6 @@ public class CompraRepository {
             
             while (rs.next()) {
                 Compra compra = mapearCompra(rs);
-                // Obtener los detalles de la compra
                 compra.setDetalles(obtenerDetallesPorCompra(compra.getId()));
                 compras.add(compra);
             }
@@ -51,11 +39,6 @@ public class CompraRepository {
         return compras;
     }
     
-    /**
-     * Obtiene una compra por su ID
-     * @param id ID de la compra
-     * @return Compra encontrada o null si no existe
-     */
     public Compra obtenerPorId(int id) {
         String sql = "SELECT * FROM compras WHERE id = ?";
         
@@ -67,7 +50,6 @@ public class CompraRepository {
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     Compra compra = mapearCompra(rs);
-                    // Obtener los detalles de la compra
                     compra.setDetalles(obtenerDetallesPorCompra(compra.getId()));
                     return compra;
                 }
@@ -79,11 +61,6 @@ public class CompraRepository {
         return null;
     }
     
-    /**
-     * Obtiene las compras de un usuario
-     * @param usuarioId ID del usuario
-     * @return Lista de compras del usuario
-     */
     public List<Compra> obtenerPorUsuario(int usuarioId) {
         List<Compra> compras = new ArrayList<>();
         String sql = "SELECT * FROM compras WHERE comprador_id = ?";
@@ -96,7 +73,6 @@ public class CompraRepository {
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     Compra compra = mapearCompra(rs);
-                    // Obtener los detalles de la compra
                     compra.setDetalles(obtenerDetallesPorCompra(compra.getId()));
                     compras.add(compra);
                 }
@@ -108,11 +84,6 @@ public class CompraRepository {
         return compras;
     }
     
-    /**
-     * Inserta una nueva compra en la base de datos
-     * @param compra Compra a insertar
-     * @return ID de la compra insertada o -1 si falla
-     */
     public int insertar(Compra compra) {
         String sql = "INSERT INTO compras (comprador_id, fecha, total, estado) " +
                      "VALUES (?, ?, ?, ?) RETURNING id";
@@ -133,7 +104,6 @@ public class CompraRepository {
                     if (rs.next()) {
                         compraId = rs.getInt(1);
                         
-                        // Insertar los detalles de la compra
                         for (DetalleCompra detalle : compra.getDetalles()) {
                             detalle.getCompra().setId(compraId);
                             int detalleId = insertarDetalle(detalle, conn);
@@ -142,7 +112,6 @@ public class CompraRepository {
                                 return -1;
                             }
                             
-                            // Actualizar el stock del producto
                             Producto producto = detalle.getProducto();
                             int nuevoStock = producto.getStock() - detalle.getCantidad();
                             if (nuevoStock < 0) {
@@ -185,12 +154,6 @@ public class CompraRepository {
         }
     }
     
-    /**
-     * Actualiza el estado de una compra
-     * @param compraId ID de la compra
-     * @param nuevoEstado Nuevo estado de la compra
-     * @return true si se actualizó correctamente, false en caso contrario
-     */
     public boolean actualizarEstado(int compraId, String nuevoEstado) {
         String sql = "UPDATE compras SET estado = ? WHERE id = ?";
         
@@ -208,11 +171,6 @@ public class CompraRepository {
         }
     }
     
-    /**
-     * Obtiene los detalles de una compra
-     * @param compraId ID de la compra
-     * @return Lista de detalles de la compra
-     */
     public List<DetalleCompra> obtenerDetallesPorCompra(int compraId) {
         List<DetalleCompra> detalles = new ArrayList<>();
         String sql = "SELECT * FROM detalles_compra WHERE compra_id = ?";
@@ -234,14 +192,6 @@ public class CompraRepository {
         
         return detalles;
     }
-    
-    /**
-     * Inserta un detalle de compra en la base de datos
-     * @param detalle Detalle a insertar
-     * @param conn Conexión a la base de datos
-     * @return ID del detalle insertado o -1 si falla
-     * @throws SQLException Si ocurre un error en la base de datos
-     */
     private int insertarDetalle(DetalleCompra detalle, Connection conn) throws SQLException {
         String sql = "INSERT INTO detalles_compra (compra_id, producto_id, cantidad, precio_unitario, subtotal) " +
                      "VALUES (?, ?, ?, ?, ?) RETURNING id";
@@ -263,17 +213,10 @@ public class CompraRepository {
         return -1;
     }
     
-    /**
-     * Mapea un ResultSet a un objeto Compra
-     * @param rs ResultSet con los datos de la compra
-     * @return Objeto Compra
-     * @throws SQLException Si ocurre un error al acceder a los datos
-     */
     private Compra mapearCompra(ResultSet rs) throws SQLException {
         Compra compra = new Compra();
         compra.setId(rs.getInt("id"));
         
-        // Obtener el comprador
         int compradorId = rs.getInt("comprador_id");
         Usuario comprador = usuarioRepository.obtenerPorId(compradorId);
         compra.setComprador(comprador);
@@ -285,23 +228,15 @@ public class CompraRepository {
         return compra;
     }
     
-    /**
-     * Mapea un ResultSet a un objeto DetalleCompra
-     * @param rs ResultSet con los datos del detalle
-     * @return Objeto DetalleCompra
-     * @throws SQLException Si ocurre un error al acceder a los datos
-     */
     private DetalleCompra mapearDetalle(ResultSet rs) throws SQLException {
         DetalleCompra detalle = new DetalleCompra();
         detalle.setId(rs.getInt("id"));
         
-        // Obtener la compra
         int compraId = rs.getInt("compra_id");
         Compra compra = new Compra();
         compra.setId(compraId);
         detalle.setCompra(compra);
         
-        // Obtener el producto
         int productoId = rs.getInt("producto_id");
         Producto producto = productoRepository.obtenerPorId(productoId);
         detalle.setProducto(producto);

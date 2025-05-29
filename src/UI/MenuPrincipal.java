@@ -10,12 +10,12 @@ import java.util.Scanner;
  */
 public class MenuPrincipal {
     
-    private Scanner scanner;
-    private Usuario usuarioActual;
-    private MenuUsuario menuUsuario;
-    private MenuProducto menuProducto;
-    private MenuCompra menuCompra;
-    private MenuAdmin menuAdmin;
+    private static Scanner scanner;
+    private static Usuario usuarioActual;
+    private static MenuUsuario menuUsuario;
+    private static MenuProducto menuProducto;
+    private static MenuCompra menuCompra;
+    private static MenuAdmin menuAdmin;
     
     /**
      * Constructor
@@ -31,7 +31,7 @@ public class MenuPrincipal {
     /**
      * Inicia el menú principal
      */
-    public void iniciar() {
+    public static void iniciar() {
         boolean salir = false;
         
         while (!salir) {
@@ -41,28 +41,18 @@ public class MenuPrincipal {
             switch (opcion) {
                 case 1:
                     // Iniciar sesión
-                    iniciarSesion();
+                    iniciarSesion();  
+                    MenuPrincipal.mostrarMenuUsuarioLogueado();
                     break;
                 case 2:
                     // Registrarse
                     registrarse();
                     break;
-                case 3:
-                    // Ver productos
-                    menuProducto.mostrarProductos();
-                    break;
-                case 4:
-                    // Buscar productos
-                    menuProducto.buscarProductos();
-                    break;
-                case 5:
-                    // Ver categorías
-                    menuProducto.mostrarCategorias();
-                    break;
                 case 0:
                     // Salir
-                    salir = true;
-                    System.out.println("¡Gracias por usar MercadoLibre!");
+                    System.exit(0);
+                    System.out.println("¡Gracias por usar MercadoLibre :)!");
+                    System.out.println("¡Hasta pronto!");
                     break;
                 default:
                     System.out.println("Opción no válida. Intente nuevamente.");
@@ -74,26 +64,28 @@ public class MenuPrincipal {
     /**
      * Muestra el menú principal
      */
-    private void mostrarMenu() {
+    public static void mostrarMenu() {
         System.out.println("\n===== MERCADO LIBRE =====");
-        if (usuarioActual != null) {
-            System.out.println("Usuario: " + usuarioActual.getNombre() + " " + usuarioActual.getApellido());
-            mostrarMenuUsuarioLogueado();
-        } else {
+        System.out.println("\nInicie sesión para comenzar. :)");
+        
             System.out.println("1. Iniciar sesión");
             System.out.println("2. Registrarse");
-            System.out.println("3. Ver productos");
-            System.out.println("4. Buscar productos");
-            System.out.println("5. Ver categorías");
             System.out.println("0. Salir");
+        
+            System.out.print("Seleccione una opción: ");
         }
-        System.out.print("Seleccione una opción: ");
-    }
+    
     
     /**
      * Muestra el menú para usuarios logueados
      */
-    private void mostrarMenuUsuarioLogueado() {
+    public static void mostrarMenuUsuarioLogueado() {
+        /*if (usuarioActual != null) {
+            System.out.println("Usuario: " + usuarioActual.getNombre() + " " + usuarioActual.getApellido());
+            mostrarMenuUsuarioLogueado();
+        } else {*/
+        System.out.println("Bienvenido a Mercado Libre " + usuarioActual.getNombre() + "!");
+        System.out.println("0. Cerrar sesión");
         System.out.println("1. Ver mi perfil");
         System.out.println("2. Ver productos");
         System.out.println("3. Buscar productos");
@@ -101,14 +93,18 @@ public class MenuPrincipal {
         System.out.println("5. Ver carrito");
         System.out.println("6. Mis compras");
         
-        if (usuarioActual.isEsVendedor()) {
+        if (usuarioActual.isEsVendedor() == true) {
             System.out.println("7. Mis productos");
             System.out.println("8. Agregar producto");
+            System.out.println("9. Administración");
+            System.out.println("Seleccione una opción: ");
+            procesarOpcionUsuarioLogueado();
         }
         
         // Menú de administrador (simulado para el usuario con ID 1)
-        if (usuarioActual.getId() == 1) {
-            System.out.println("9. Administración");
+        if (usuarioActual.isEsVendedor() == false) {
+            System.out.println("Sellecione una opcion: ");
+            procesarOpcionUsuarioLogueado();
         }
         
         System.out.println("0. Cerrar sesión");
@@ -118,10 +114,11 @@ public class MenuPrincipal {
      * Lee una opción del usuario
      * @return Opción seleccionada
      */
-    private int leerOpcion() {
+    public static int leerOpcion() {
         try {
             return Integer.parseInt(scanner.nextLine());
         } catch (NumberFormatException e) {
+            System.out.println("Error en leer opcion: " + e.getMessage());
             return -1;
         }
     }
@@ -129,14 +126,14 @@ public class MenuPrincipal {
     /**
      * Inicia sesión de un usuario
      */
-    private void iniciarSesion() {
+    public static void iniciarSesion() {
         menuUsuario.iniciarSesion();
     }
     
     /**
      * Registra un nuevo usuario
      */
-    private void registrarse() {
+    public static void registrarse() {
         menuUsuario.registrarse();
     }
     
@@ -144,7 +141,10 @@ public class MenuPrincipal {
      * Procesa la opción seleccionada por un usuario logueado
      * @param opcion Opción seleccionada
      */
-    public void procesarOpcionUsuarioLogueado(int opcion) {
+    public static void procesarOpcionUsuarioLogueado() {
+        Scanner sc = new Scanner(System.in);
+        int opcion = sc.nextInt();
+        sc.nextLine();
         switch (opcion) {
             case 1:
                 // Ver mi perfil
@@ -176,6 +176,7 @@ public class MenuPrincipal {
                     menuProducto.verMisProductos();
                 } else {
                     System.out.println("Opción no válida. Intente nuevamente.");
+                    MenuPrincipal.mostrarMenuUsuarioLogueado();
                 }
                 break;
             case 8:
@@ -184,6 +185,7 @@ public class MenuPrincipal {
                     menuProducto.agregarProducto();
                 } else {
                     System.out.println("Opción no válida. Intente nuevamente.");
+                    MenuPrincipal.mostrarMenuUsuarioLogueado();
                 }
                 break;
             case 9:
@@ -192,6 +194,7 @@ public class MenuPrincipal {
                     menuAdmin.mostrarMenu();
                 } else {
                     System.out.println("Opción no válida. Intente nuevamente.");
+                    MenuPrincipal.mostrarMenuUsuarioLogueado();
                 }
                 break;
             case 0:
@@ -207,8 +210,9 @@ public class MenuPrincipal {
     /**
      * Cierra la sesión del usuario actual
      */
-    private void cerrarSesion() {
+    public static void cerrarSesion() {
         usuarioActual = null;
+        MenuPrincipal.iniciar();
         System.out.println("Sesión cerrada correctamente.");
     }
     
@@ -216,7 +220,7 @@ public class MenuPrincipal {
      * Obtiene el usuario actual
      * @return Usuario actual
      */
-    public Usuario getUsuarioActual() {
+    public static Usuario getUsuarioActual() {
         return usuarioActual;
     }
     
@@ -232,7 +236,7 @@ public class MenuPrincipal {
      * Obtiene el scanner
      * @return Scanner
      */
-    public Scanner getScanner() {
+    public static Scanner getScanner() {
         return scanner;
     }
     
@@ -241,7 +245,6 @@ public class MenuPrincipal {
      * @param args Argumentos de línea de comandos
      */
     public static void main(String[] args) {
-        MenuPrincipal menu = new MenuPrincipal();
-        menu.iniciar();
+        MenuPrincipal.iniciar();
     }
 }

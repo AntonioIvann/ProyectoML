@@ -13,27 +13,16 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Repositorio para operaciones CRUD de productos en la base de datos
- * @author v0
- */
 public class ProductoRepository {
     
     private CategoriaRepository categoriaRepository;
     private UsuarioRepository usuarioRepository;
     
-    /**
-     * Constructor
-     */
     public ProductoRepository() {
         this.categoriaRepository = new CategoriaRepository();
         this.usuarioRepository = new UsuarioRepository();
     }
     
-    /**
-     * Obtiene todos los productos de la base de datos
-     * @return Lista de productos
-     */
     public List<Producto> obtenerTodos() {
         List<Producto> productos = new ArrayList<>();
         String sql = "SELECT * FROM productos WHERE activo = true";
@@ -53,11 +42,6 @@ public class ProductoRepository {
         return productos;
     }
     
-    /**
-     * Obtiene un producto por su ID
-     * @param id ID del producto
-     * @return Producto encontrado o null si no existe
-     */
     public Producto obtenerPorId(int id) {
         String sql = "SELECT * FROM productos WHERE id = ?";
         
@@ -78,11 +62,6 @@ public class ProductoRepository {
         return null;
     }
     
-    /**
-     * Obtiene productos por categoría
-     * @param categoriaId ID de la categoría
-     * @return Lista de productos de la categoría
-     */
     public List<Producto> obtenerPorCategoria(int categoriaId) {
         List<Producto> productos = new ArrayList<>();
         String sql = "SELECT * FROM productos WHERE categoria_id = ? AND activo = true";
@@ -105,11 +84,6 @@ public class ProductoRepository {
         return productos;
     }
     
-    /**
-     * Obtiene productos por vendedor
-     * @param vendedorId ID del vendedor
-     * @return Lista de productos del vendedor
-     */
     public List<Producto> obtenerPorVendedor(int vendedorId) {
         List<Producto> productos = new ArrayList<>();
         String sql = "SELECT * FROM productos WHERE vendedor_id = ?";
@@ -132,11 +106,6 @@ public class ProductoRepository {
         return productos;
     }
     
-    /**
-     * Busca productos por nombre o descripción
-     * @param termino Término de búsqueda
-     * @return Lista de productos que coinciden con la búsqueda
-     */
     public List<Producto> buscar(String termino) {
         List<Producto> productos = new ArrayList<>();
         String sql = "SELECT * FROM productos WHERE (nombre ILIKE ? OR descripcion ILIKE ?) AND activo = true";
@@ -161,11 +130,6 @@ public class ProductoRepository {
         return productos;
     }
     
-    /**
-     * Inserta un nuevo producto en la base de datos
-     * @param producto Producto a insertar
-     * @return ID del producto insertado o -1 si falla
-     */
     public int insertar(Producto producto) {
         String sql = "INSERT INTO productos (nombre, descripcion, precio, stock, categoria_id, vendedor_id, imagen, activo) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?, ?) RETURNING id";
@@ -194,11 +158,6 @@ public class ProductoRepository {
         return -1;
     }
     
-    /**
-     * Actualiza un producto existente en la base de datos
-     * @param producto Producto a actualizar
-     * @return true si se actualizó correctamente, false en caso contrario
-     */
     public boolean actualizar(Producto producto) {
         String sql = "UPDATE productos SET nombre = ?, descripcion = ?, precio = ?, " +
                      "stock = ?, categoria_id = ?, vendedor_id = ?, imagen = ?, activo = ? " +
@@ -225,12 +184,6 @@ public class ProductoRepository {
         }
     }
     
-    /**
-     * Actualiza el stock de un producto
-     * @param productoId ID del producto
-     * @param nuevoStock Nuevo valor de stock
-     * @return true si se actualizó correctamente, false en caso contrario
-     */
     public boolean actualizarStock(int productoId, int nuevoStock) {
         String sql = "UPDATE productos SET stock = ? WHERE id = ?";
         
@@ -248,11 +201,6 @@ public class ProductoRepository {
         }
     }
     
-    /**
-     * Elimina un producto de la base de datos (eliminación lógica)
-     * @param id ID del producto a eliminar
-     * @return true si se eliminó correctamente, false en caso contrario
-     */
     public boolean eliminar(int id) {
         String sql = "UPDATE productos SET activo = false WHERE id = ?";
         
@@ -269,12 +217,6 @@ public class ProductoRepository {
         }
     }
     
-    /**
-     * Mapea un ResultSet a un objeto Producto
-     * @param rs ResultSet con los datos del producto
-     * @return Objeto Producto
-     * @throws SQLException Si ocurre un error al acceder a los datos
-     */
     private Producto mapearProducto(ResultSet rs) throws SQLException {
         Producto producto = new Producto();
         producto.setId(rs.getInt("id"));
@@ -285,12 +227,10 @@ public class ProductoRepository {
         producto.setImagen(rs.getString("imagen"));
         producto.setActivo(rs.getBoolean("activo"));
         
-        // Obtener la categoría
         int categoriaId = rs.getInt("categoria_id");
         Categoria categoria = categoriaRepository.obtenerPorId(categoriaId);
         producto.setCategoria(categoria);
         
-        // Obtener el vendedor
         int vendedorId = rs.getInt("vendedor_id");
         Usuario vendedor = usuarioRepository.obtenerPorId(vendedorId);
         producto.setVendedor(vendedor);

@@ -17,11 +17,11 @@ import java.util.Scanner;
  */
 public class MenuAdmin {
     
-    private MenuPrincipal menuPrincipal;
-    private Scanner scanner;
-    private UsuarioController usuarioController;
-    private CategoriaController categoriaController;
-    private CompraController compraController;
+    private static MenuPrincipal menuPrincipal;
+    private static Scanner scanner;
+    private static UsuarioController usuarioController;
+    private static CategoriaController categoriaController;
+    private static CompraController compraController;
     
     /**
      * Constructor
@@ -38,7 +38,7 @@ public class MenuAdmin {
     /**
      * Muestra el menú de administración
      */
-    public void mostrarMenu() {
+    public static void mostrarMenu() {
         Usuario usuarioActual = menuPrincipal.getUsuarioActual();
         
         // Verificar que el usuario sea administrador (simulado con ID 1)
@@ -66,7 +66,7 @@ public class MenuAdmin {
                         gestionarCompras();
                         break;
                     case 0:
-                        salir = true;
+                    MenuPrincipal.mostrarMenuUsuarioLogueado();
                         break;
                     default:
                         System.out.println("Opción no válida. Intente nuevamente.");
@@ -81,7 +81,7 @@ public class MenuAdmin {
     /**
      * Gestiona los usuarios
      */
-    private void gestionarUsuarios() {
+    private static void gestionarUsuarios() {
         boolean salir = false;
         
         while (!salir) {
@@ -105,7 +105,7 @@ public class MenuAdmin {
                     eliminarUsuario();
                     break;
                 case 0:
-                    salir = true;
+                    MenuAdmin.mostrarMenu();
                     break;
                 default:
                     System.out.println("Opción no válida. Intente nuevamente.");
@@ -117,7 +117,7 @@ public class MenuAdmin {
     /**
      * Muestra todos los usuarios
      */
-    private void verTodosLosUsuarios() {
+    private static void verTodosLosUsuarios() {
         List<Usuario> usuarios = usuarioController.obtenerTodos();
         
         System.out.println("\n===== USUARIOS =====");
@@ -137,7 +137,7 @@ public class MenuAdmin {
     /**
      * Busca un usuario por su ID
      */
-    private void buscarUsuarioPorId() {
+    private static void buscarUsuarioPorId() {
         System.out.print("Ingrese el ID del usuario: ");
         int id = Integer.parseInt(scanner.nextLine());
         
@@ -160,7 +160,7 @@ public class MenuAdmin {
     /**
      * Elimina un usuario
      */
-    private void eliminarUsuario() {
+    private static void eliminarUsuario() {
         System.out.print("Ingrese el ID del usuario a eliminar: ");
         int id = Integer.parseInt(scanner.nextLine());
         
@@ -196,7 +196,7 @@ public class MenuAdmin {
     /**
      * Gestiona las categorías
      */
-    private void gestionarCategorias() {
+    private static void gestionarCategorias() {
         boolean salir = false;
         
         while (!salir) {
@@ -224,7 +224,7 @@ public class MenuAdmin {
                     eliminarCategoria();
                     break;
                 case 0:
-                    salir = true;
+                MenuAdmin.mostrarMenu();
                     break;
                 default:
                     System.out.println("Opción no válida. Intente nuevamente.");
@@ -236,7 +236,7 @@ public class MenuAdmin {
     /**
      * Muestra todas las categorías
      */
-    private void verTodasLasCategorias() {
+    private static void verTodasLasCategorias() {
         List<Categoria> categorias = categoriaController.obtenerTodas();
         
         System.out.println("\n===== CATEGORÍAS =====");
@@ -255,7 +255,7 @@ public class MenuAdmin {
     /**
      * Agrega una nueva categoría
      */
-    private void agregarCategoria() {
+    private static void agregarCategoria() {
         System.out.println("\n===== AGREGAR CATEGORÍA =====");
         
         System.out.print("Nombre: ");
@@ -276,7 +276,7 @@ public class MenuAdmin {
     /**
      * Edita una categoría
      */
-    private void editarCategoria() {
+    private static void editarCategoria() {
         System.out.print("Ingrese el ID de la categoría a editar: ");
         int id = Integer.parseInt(scanner.nextLine());
         
@@ -312,7 +312,7 @@ public class MenuAdmin {
     /**
      * Elimina una categoría
      */
-    private void eliminarCategoria() {
+    private static void eliminarCategoria() {
         System.out.print("Ingrese el ID de la categoría a eliminar: ");
         int id = Integer.parseInt(scanner.nextLine());
         
@@ -342,7 +342,7 @@ public class MenuAdmin {
     /**
      * Gestiona las compras
      */
-    private void gestionarCompras() {
+    private static void gestionarCompras() {
         boolean salir = false;
         
         while (!salir) {
@@ -366,7 +366,7 @@ public class MenuAdmin {
                     actualizarEstadoCompra();
                     break;
                 case 0:
-                    salir = true;
+                    MenuAdmin.mostrarMenu();
                     break;
                 default:
                     System.out.println("Opción no válida. Intente nuevamente.");
@@ -378,7 +378,7 @@ public class MenuAdmin {
     /**
      * Muestra todas las compras
      */
-    private void verTodasLasCompras() {
+    private static void verTodasLasCompras() {
         List<Compra> compras = compraController.obtenerTodas();
         
         System.out.println("\n===== COMPRAS =====");
@@ -399,7 +399,7 @@ public class MenuAdmin {
     /**
      * Muestra el detalle de una compra
      */
-    private void verDetalleCompra() {
+    private static void verDetalleCompra() {
         System.out.print("Ingrese el ID de la compra: ");
         int id = Integer.parseInt(scanner.nextLine());
         
@@ -429,7 +429,7 @@ public class MenuAdmin {
     /**
      * Actualiza el estado de una compra
      */
-    private void actualizarEstadoCompra() {
+    private static void actualizarEstadoCompra() {
         System.out.print("Ingrese el ID de la compra: ");
         int id = Integer.parseInt(scanner.nextLine());
         

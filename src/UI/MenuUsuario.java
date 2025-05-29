@@ -36,7 +36,7 @@ public class MenuUsuario {
         
         System.out.print("Contraseña: ");
         String password = scanner.nextLine();
-        
+        try {
         Usuario usuario = usuarioController.autenticar(email, password);
         
         if (usuario != null) {
@@ -44,6 +44,10 @@ public class MenuUsuario {
             menuPrincipal.setUsuarioActual(usuario);
         } else {
             System.out.println("Credenciales incorrectas. Intente nuevamente.");
+            iniciarSesion();
+        }
+        } catch (Exception e) {
+            System.err.println("Error al iniciar sesion: " + e);
         }
     }
     
@@ -109,9 +113,11 @@ public class MenuUsuario {
             switch (opcion) {
                 case 1:
                     editarPerfil();
+                    MenuPrincipal.mostrarMenuUsuarioLogueado();
                     break;
                 case 0:
                     // Volver
+                    MenuPrincipal.mostrarMenuUsuarioLogueado();
                     break;
                 default:
                     System.out.println("Opción no válida. Intente nuevamente.");
@@ -176,6 +182,7 @@ public class MenuUsuario {
                 // Actualizar el usuario actual con los nuevos datos
                 Usuario usuarioActualizado = usuarioController.obtenerPorId(usuario.getId());
                 menuPrincipal.setUsuarioActual(usuarioActualizado);
+                menuPrincipal.mostrarMenuUsuarioLogueado();
             } else {
                 System.out.println("Error al actualizar el perfil. Intente nuevamente.");
             }

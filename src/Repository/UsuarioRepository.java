@@ -9,10 +9,6 @@ import java.util.*;
 
 public class UsuarioRepository {
     
-    /**
-     * Obtiene todos los usuarios de la base de datos
-     * @return Lista de usuarios
-     */
     public List<Usuario> obtenerTodos() {
         List<Usuario> usuarios = new ArrayList<>();
         String sql = "SELECT * FROM usuarios";
@@ -32,11 +28,6 @@ public class UsuarioRepository {
         return usuarios;
     }
     
-    /**
-     * Obtiene un usuario por su ID
-     * @param id ID del usuario
-     * @return Usuario encontrado o null si no existe
-     */
     public Usuario obtenerPorId(int id) {
         String sql = "SELECT * FROM usuarios WHERE id = ?";
         
@@ -57,11 +48,6 @@ public class UsuarioRepository {
         return null;
     }
     
-    /**
-     * Obtiene un usuario por su email
-     * @param email Email del usuario
-     * @return Usuario encontrado o null si no existe
-     */
     public Usuario obtenerPorEmail(String email) {
         String sql = "SELECT * FROM usuarios WHERE email = ?";
         
@@ -82,11 +68,6 @@ public class UsuarioRepository {
         return null;
     }
     
-    /**
-     * Inserta un nuevo usuario en la base de datos
-     * @param usuario Usuario a insertar
-     * @return ID del usuario insertado o -1 si falla
-     */
     public int insertar(Usuario usuario) {
         String sql = "INSERT INTO usuarios (nombre, apellido, email, password, telefono, direccion, es_vendedor) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id";
@@ -114,11 +95,6 @@ public class UsuarioRepository {
         return -1;
     }
     
-    /**
-     * Actualiza un usuario existente en la base de datos
-     * @param usuario Usuario a actualizar
-     * @return true si se actualizó correctamente, false en caso contrario
-     */
     public boolean actualizar(Usuario usuario) {
         String sql = "UPDATE usuarios SET nombre = ?, apellido = ?, email = ?, " +
                      "password = ?, telefono = ?, direccion = ?, es_vendedor = ? " +
@@ -144,11 +120,6 @@ public class UsuarioRepository {
         }
     }
     
-    /**
-     * Elimina un usuario de la base de datos
-     * @param id ID del usuario a eliminar
-     * @return true si se eliminó correctamente, false en caso contrario
-     */
     public boolean eliminar(int id) {
         String sql = "DELETE FROM usuarios WHERE id = ?";
         
@@ -165,12 +136,6 @@ public class UsuarioRepository {
         }
     }
     
-    /**
-     * Verifica las credenciales de un usuario para el login
-     * @param email Email del usuario
-     * @param password Contraseña del usuario
-     * @return Usuario autenticado o null si las credenciales son inválidas
-     */
     public Usuario autenticar(String email, String password) {
         String sql = "SELECT * FROM usuarios WHERE email = ? AND password = ?";
         
@@ -192,12 +157,6 @@ public class UsuarioRepository {
         return null;
     }
     
-    /**
-     * Mapea un ResultSet a un objeto Usuario
-     * @param rs ResultSet con los datos del usuario
-     * @return Objeto Usuario
-     * @throws SQLException Si ocurre un error al acceder a los datos
-     */
     private Usuario mapearUsuario(ResultSet rs) throws SQLException {
         Usuario usuario = new Usuario();
         usuario.setId(rs.getInt("id"));
